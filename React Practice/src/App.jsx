@@ -1,15 +1,33 @@
-import { DogImage } from "./Component/DogImage";
-import { Content } from "./Component/Content";
-import "./App.css";
+import React, { Suspense } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AppNavbar } from './Component/AppNavbar';
+import "bootstrap/dist/css/bootstrap.min.css";
+import { delayForDemo } from "./helper/delayForDemo";
+
+const Home = React.lazy(() => delayForDemo(import("./pages/Home")));
+const DogApi = React.lazy(() => delayForDemo(import("./pages/DogApi")));
+const JSONPlaceholderApi = React.lazy(() =>
+  delayForDemo(import("./pages/JsonPlaceholderApi"))
+);
 
 function App() {
   return (
-    <>
-      <h1>Dog Image Fetcher</h1>
-      <div className="card">
-        <Content />
+    <Router>
+      <div>
+        <AppNavbar />
+
+        <Suspense fallback={<div>🌀🌀Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/dog" element={<DogApi />} />
+            <Route
+              path="/jsonPlaceholderApi"
+              element={<JSONPlaceholderApi />}
+            />
+          </Routes>
+        </Suspense>
       </div>
-    </>
+    </Router>
   );
 }
 
